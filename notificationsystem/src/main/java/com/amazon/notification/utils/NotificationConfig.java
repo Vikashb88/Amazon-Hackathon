@@ -16,7 +16,20 @@ public class NotificationConfig {
     
     public String getInboundFilePath(){
         
-        return "D:\\New folder";
+        return "D:\\amazon\\in\\";
     }
+    
+    public String getOutboundFilePath(){
+        return "D:\\amazon\\out\\output.csv";
+    }
+    
+    public String getArchiveFilePath(){
+        return "D:\\amazon\\archive\\";
+    }
+    
+    public String getErrorFilePath(){
+        return "D:\\amazon\\error\\";
+    }
+
     
 }

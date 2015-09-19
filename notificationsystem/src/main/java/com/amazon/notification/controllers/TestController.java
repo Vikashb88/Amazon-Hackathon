@@ -6,9 +6,12 @@
 
 package com.amazon.notification.controllers;
 
+import com.amazon.notification.utils.DataManager;
+import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -20,8 +23,14 @@ public class TestController {
     
     @RequestMapping(value = "/sample/test", produces = "application/json", method = RequestMethod.GET)
     @ResponseBody
-    public String getTest(){
-        return "hello";
+    public String getTest(@RequestParam String query){
+        
+        Map<String,String> map = DataManager.getInstance().getDataMap().hgetAll(query);
+        String output  = "";
+        if(map != null){
+            output=map.toString();
+        }
+        return output;
     }
     
 }

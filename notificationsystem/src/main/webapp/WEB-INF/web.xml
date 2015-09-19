@@ -7,6 +7,11 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+    
+  <description>ServletContextListener</description>
+  <listener>
+    <listener-class>com.amazon.notification.utils.PersistenceAppListener</listener-class>
+  </listener>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
