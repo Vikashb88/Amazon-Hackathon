@@ -48,7 +48,7 @@ public class DataManager {
 
         if (jedis == null) {
             sender = new Sender();
-            
+
             createOutputMap();
         }
         return jedis;
@@ -146,9 +146,9 @@ public class DataManager {
     }
 
     public void checkSubscription(String key, String value) {
-        Map<String,String> map = jedis.hgetAll(key);
+        Map<String, String> map = jedis.hgetAll(key);
         checkSubscriptionConditions(map, key, value);
-       
+
     }
 
     private static enum ConditionCode {
@@ -172,14 +172,15 @@ public class DataManager {
             String[] entryValue = entry.getValue().split(",");
             String condition = entryValue[1];
             String conditionValue = entryValue[0];
+            if (sender == null) {
+                sender = new Sender();
+            }
             switch (ConditionCode.valueOf(condition.toUpperCase())) {
                 case EQ:
-                    if(key.equals("release date") &&  CompareDate(value, conditionValue)){
-                        System.out.println("-- Push to subcriber -- "+key+" ="+value);
-                    }else if(value.equals(conditionValue)) {
-                        if(sender == null){
-                            sender = new Sender();
-                        }
+                    if (key.equals("release date") && compareDates(value, conditionValue) == 0) {
+                        sender.sendMessage(susbcriber, key, value);
+                    } else if (value.equals(conditionValue)) {
+
                         sender.sendMessage(susbcriber, key, value);
                     }
                     break;
@@ -190,25 +191,31 @@ public class DataManager {
                     }
                     break;
                 case LTE:
-                    if(key.equals("release date") &&  CompareDate(value, conditionValue)){
-                        System.out.println("-- Push to subcriber");
-                    }else if (Integer.parseInt(value) <= Integer.parseInt(conditionValue)) {
-                        System.out.println("------ Push to Susbcriber-----");
+                    if (key.equals("release date") && compareDates(value, conditionValue) < 0) {
+                        sender.sendMessage(susbcriber, key, value);
+                    } else if (extractDigits(value) <= extractDigits(conditionValue)) {
+                        sender.sendMessage(susbcriber, key, value);
                     }
                     break;
                 case GT:
-                    if (Integer.parseInt(value) > Integer.parseInt(conditionValue)) {
-                        System.out.println("------ Push to Susbcriber-----");
+                    if (key.equals("release date") && compareDates(value, conditionValue) > 0) {
+                        sender.sendMessage(susbcriber, key, value);
+                    } else if (extractDigits(value) > extractDigits(conditionValue)) {
+                        sender.sendMessage(susbcriber, key, value);
                     }
                     break;
                 case GTE:
-                    if (Integer.parseInt(value) >= Integer.parseInt(conditionValue)) {
-                        System.out.println("------ Push to Susbcriber-----");
+                    if (key.equals("release date") && compareDates(value, conditionValue) > 0) {
+                        sender.sendMessage(susbcriber, key, value);
+                    } else if (extractDigits(value) >= extractDigits(conditionValue)) {
+                        sender.sendMessage(susbcriber, key, value);
                     }
                     break;
                 case LT:
-                    if (Integer.parseInt(value) < Integer.parseInt(conditionValue)) {
-                        System.out.println("------ Push to Susbcriber-----");
+                    if (key.equals("release date") && compareDates(value, conditionValue) < 0) {
+                        sender.sendMessage(susbcriber, key, value);
+                    } else if (extractDigits(value) < extractDigits(conditionValue)) {
+                        sender.sendMessage(susbcriber, key, value);
                     }
                     break;
                 default:
@@ -218,17 +225,22 @@ public class DataManager {
         }
     }
 
-    public boolean CompareDate(String dateString1, String dateString2) {
-        Date date1=null,date2=null;
-        try{
-        DateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.ENGLISH);
-         date1 = format.parse(dateString1);
-         date2 = format.parse(dateString2);
-        }catch(Exception e){
-            
-        }
-        return date1.after(date2);
+    public int compareDates(String dateString1, String dateString2) {
+        Date date1 = null, date2 = null;
+        try {
+            DateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.ENGLISH);
+            date1 = format.parse(dateString1);
+            date2 = format.parse(dateString2);
+        } catch (Exception e) {
 
+        }
+        return date1.compareTo(date2);
+
+    }
+
+    public int extractDigits(String str) {
+        String numberOnly = str.replaceAll("[^0-9]", "");
+        return Integer.parseInt(numberOnly);
     }
 
 }
