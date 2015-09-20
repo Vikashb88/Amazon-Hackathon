@@ -42,6 +42,6 @@ In Subscription CSV we have maintained 6 conditions
 #Idea
 1. Redis, in-memory datastructure store is used as database. It's a "NoSQL" key-value data store. More precisely, it is a data structure server. 
 2. Spring task scheduler will watch the input  folder for n intervals. The intervals are configurable.
-3. Once a new file is arrives, using spring batch chunk processing the data are moved to redis. Scalability and parallel processing is handled in Spring batch.
+3. Once a new file arrives, using spring batch chunk processing the data are moved to redis. Scalability and parallel processing is handled in Spring batch.
 4. It also checks the condition with the subscriber and sends out the notification via email using Active Mq.
 5. If the entire file is processed, its moved to the archive folder. For any errors while processing the files, it gets moved to the error folder.
