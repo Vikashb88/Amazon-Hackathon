@@ -18,10 +18,11 @@ Technologies Used :
        3) archive - after successful process, files will be archived for future reference
        4) subscription - it will have the file with subcription data.
        
-           Here subscription data is maintained in a csv file and then loaded into Redis using java Jedis client. We can have the 
-    subscription data in any SQL database and use it query also.
+           Here subscription data is maintained in a csv file and then loaded into Redis using java Jedis client. 
+           We can have the subscription data in any SQL database and use it query also.
     
-    Subscription Data format :
+    
+Subscription Data format :
     
 #key,susbcriber,value,condition
 title,c.bala1988@gmail.com,Java Basics,eq
@@ -36,5 +37,7 @@ In Subscription CSV we have maintained 6 conditions
   4) gt - >
   5) gte - >=
   6) lk - like 
+  
+  
       
 
