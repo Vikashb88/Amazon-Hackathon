@@ -45,3 +45,6 @@ In Subscription CSV we have maintained 6 conditions
 3. Once a new file arrives, using spring batch chunk processing the data are moved to redis. Scalability and parallel processing is handled in Spring batch.
 4. It also checks the condition with the subscriber and sends out the notification via email using Active Mq.
 5. If the entire file is processed, its moved to the archive folder. For any errors while processing the files, it gets moved to the error folder.
+
+Sample GET request: http://localhost:8080/notificationsystem/sample/test?query=13579
+OUTPUT: {list price=10 USD, publisher=William Morrow, title=freakonomics, release date=20-09-2011, authors=Levitt & Dubner}
