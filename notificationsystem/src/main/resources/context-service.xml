@@ -8,7 +8,7 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-3.1.xsd
            http://www.springframework.org/schema/task 
-           http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+           http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 
     <!-- check for annotations -->
     
@@ -20,5 +20,27 @@
     <task:scheduled-tasks>
         <task:scheduled ref="notificaitionUtil" method="scanDirectory"  fixed-delay="${notification.delayValue}" />
     </task:scheduled-tasks>    
+    
+     <bean id="notificationListener"
+              class="com.amazon.notification.utils.Receiver"/>
+
+    <bean id="vipAdminNotificationJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer"
+          destroy-method="destroy">
+        <property name="concurrentConsumers" value="1"/>
+        <property name="maxConcurrentConsumers" value="1"/>
+        <property name="connectionFactory" ref="notificationFactory"/>
+        <property name="destination" ref="notificationQueue"/>
+        <property name="messageListener" ref="notificationListener"/>
+        <property name="sessionTransacted" value="true"/>
+    </bean>  
+    
+    <!-- vipAdminNotification START-->
+    <bean id="notificationFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616"/>
+    </bean>
+
+    <bean id="notificationQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="notificationQueue" />
+    </bean>
     
 </beans>

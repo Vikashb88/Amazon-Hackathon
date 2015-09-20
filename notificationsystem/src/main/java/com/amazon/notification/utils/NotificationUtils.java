@@ -47,14 +47,6 @@ public class NotificationUtils {
         } else {
             inputFile.renameTo(new File(notificationConfig.getErrorFilePath() + newFileName));
         }
-        try{
-       
-            System.out.println("************** Inside reciever message &&&&&&&&&&&&&&&&&&&&&&");
-            receiver.receiveMessage();
-        
-        }catch(Exception e){
-            e.printStackTrace();
-        }
         
 
     }
