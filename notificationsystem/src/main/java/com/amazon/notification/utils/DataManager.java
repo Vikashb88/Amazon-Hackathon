@@ -5,6 +5,7 @@
  */
 package com.amazon.notification.utils;
 
+import com.amazon.notification.batch.Product;
 import com.csvreader.CsvReader;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -12,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
@@ -242,5 +244,9 @@ public class DataManager {
         String numberOnly = str.replaceAll("[^0-9]", "");
         return Integer.parseInt(numberOnly);
     }
-
+    
+    public void pushToJedis(List<? extends Product> products){
+        // TODO Update the current instances of Jedis
+    }
+    
 }

@@ -16,6 +16,7 @@
     <!--Imports-->
     <import resource="context-service.xml"/>
     <import resource="context-smtp.xml"/> 
+    <import resource="file-import-job.xml"/> 
     
     
     

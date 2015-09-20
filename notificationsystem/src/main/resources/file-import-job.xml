@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+
+    <!-- Import our beans -->
+    <bean id="transactionManager"
+	class="org.springframework.batch.support.transaction.ResourcelessTransactionManager" />
+    
+    <!-- Job Repository: used to persist the state of the batch job -->
+    <bean id="jobRepository" class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean">
+        
+    </bean>
+
+
+
+    <!-- Job Launcher: creates the job and the job state before launching it -->
+    <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+        <property name="jobRepository" ref="jobRepository" />
+    </bean>
+
+
+
+
+    <!-- Reader bean for our simple CSV example -->
+    <bean id="productReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+
+      <!--  <property name="resource" value="file:/sample.csv" /> -->
+        <property name="resource" value="file:#{jobParameters['inputFile']}" />
+
+
+        <!-- Skip the first line of the file because this is the header that defines the fields -->
+        <!--<property name="linesToSkip" value="1" />-->
+
+        <!-- Defines how we map lines to objects -->
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+
+                <!-- The lineTokenizer divides individual lines up into units of work -->
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+
+                        <!-- Names of the CSV columns -->
+                        <property name="names" value="id,attrName,attrValue" />
+                    </bean>
+                </property>
+
+                <!-- The fieldSetMapper maps a line in the file to a Product object -->
+                <property name="fieldSetMapper">
+                    <bean class="com.amazon.notification.batch.ProductFieldSetMapper" />
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="productWriter" class="com.amazon.notification.batch.ProductItemWriter" />
+
+    <bean id="productProcessor" class="com.amazon.notification.batch.ProductItemProcessor" />
+
+    <bean id="archiveFileTasklet" class="com.amazon.notification.batch.ArchiveProductImportFileTasklet" scope="step">
+        <property name="inputFile" value="#{jobParameters['inputFile']}" />
+    </bean>
+
+    <job id="simpleFileImportJob" xmlns="http://www.springframework.org/schema/batch">
+        <step id="importFileStep" next="archiveFileStep">
+            <tasklet>
+                <chunk reader="productReader" writer="productWriter" commit-interval="5" />
+            </tasklet>
+        </step>
+        <step id="archiveFileStep">
+            <tasklet ref="archiveFileTasklet" />
+        </step>
+    </job>
+
+</beans>

@@ -35,15 +35,10 @@ public class Receiver implements MessageListener{
 
                 String[] toArr = {text.getText().split(",")[0]};
                 String[] bccArr = {};
-                
-                System.out.println("********************************");
-                System.out.println("********************************");
-                System.out.println(notificationManager);
-                System.out.println("********************************");
-                System.out.println("********************************");
+            
 
                 notificationManager.sendEmail("amazehackathon2015@gmail.com", toArr,
-                        bccArr, text.getText().split(",")[1], "hi");
+                        bccArr, "Notification for Subscriber", text.getText().split(",")[1]);
 
                 System.out.println("Message is : " + text.getText());
             } catch (JMSException ex) {

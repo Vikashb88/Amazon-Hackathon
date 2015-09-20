@@ -15,6 +15,7 @@
         <jetty.version>8.1.3.v20120416</jetty.version>
         <org.hamcrest.version>1.3.RC2</org.hamcrest.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.batch.version>2.2.1.RELEASE</spring.batch.version>
     </properties>
 
     <profiles>
@@ -89,6 +90,17 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.batch</groupId>
+            <artifactId>spring-batch-core</artifactId>
+            <version>${spring.batch.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.batch</groupId>
+            <artifactId>spring-batch-infrastructure</artifactId>
+            <version>${spring.batch.version}</version>
         </dependency>
 
         <dependency>
